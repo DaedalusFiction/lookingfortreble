@@ -1,83 +1,85 @@
-import { Box, Button, Container, Slide, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Container,
+    Fade,
+    Slide,
+    TextField,
+    Typography,
+} from "@mui/material";
 import React, { useRef, useState } from "react";
 import BasicInfo from "../components/BasicInfo";
 import HorizontalLinearStepper from "../components/HorizontalLineStepper";
 import SonglistCreator from "../components/SonglistCreator";
+import Login from "../components/Login";
 
 const Register = () => {
     const containerRef = useRef();
-    const steps = ["songlist", "info", "login"];
-    const [currentStep, setCurrentStep] = useState("songlist");
+    const [currentStep, setCurrentStep] = useState(0);
+    const steps = 3;
 
     const handleNext = () => {
-        const nextStep = steps.indexOf(currentStep) + 1;
-        console.log(nextStep);
-        setCurrentStep(steps[nextStep]);
+        const nextStep = currentStep + 1;
+        setCurrentStep(nextStep);
     };
     const handleBack = () => {
-        const nextStep = steps.indexOf(currentStep) - 1;
-        console.log(nextStep);
-        setCurrentStep(steps[nextStep]);
+        const nextStep = currentStep - 1;
+        setCurrentStep(nextStep);
     };
     return (
-        <Container
-            maxWidth="md"
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-                height: "90vh",
-                position: "relative",
-                overflowX: "hidden",
-            }}
-        >
-            <Slide
-                direction={currentStep === "songlist" ? "left" : "right"}
-                in={currentStep === "songlist"}
+        <Container maxWidth="md">
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                    padding: "3rem 0",
+                    position: "relative",
+                    height: "40rem",
+                }}
             >
-                <Box
-                    sx={{
+                <Fade
+                    in={currentStep === 0}
+                    mountOnEnter
+                    unmountOnExit
+                    // timeout={{ enter: 200, exit: 100 }}
+                    style={{
                         position: "absolute",
-                        left: "0",
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        top: "0",
                     }}
                 >
-                    <Typography variant="h1" sx={{ textAlign: "center" }}>
-                        Create the Perfect Playlist
-                    </Typography>
-                    <Typography sx={{ textAlign: "center" }}>
-                        (Hint: It doesn't have to be perfect. You can change it
-                        later)
-                    </Typography>
-                    <SonglistCreator />
-                    <Button onClick={handleNext}>Next</Button>
-                </Box>
-            </Slide>
-            <Slide
-                direction={currentStep === "info" ? "left" : "right"}
-                in={currentStep === "info"}
-            >
-                <Box
-                    sx={{
-                        position: "absolute",
-                        left: "0",
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                    }}
-                >
-                    <BasicInfo />
                     <Box>
-                        <Button onClick={handleBack}>Back</Button>
-                        <Button onClick={handleNext}>Next</Button>
+                        <SonglistCreator />
                     </Box>
-                </Box>
-            </Slide>
+                </Fade>
+                <Fade
+                    in={currentStep === 1}
+                    mountOnEnter
+                    unmountOnExit
+                    style={{
+                        position: "absolute",
+                        top: "0",
+                    }}
+                >
+                    <Box>
+                        {/* <SonglistCreator /> */}
+                        <BasicInfo />
+                    </Box>
+                </Fade>
+                {/* <Login /> */}
+            </Box>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "2rem",
+                }}
+            >
+                <Button onClick={handleBack}>Back</Button>
+                <Button onClick={handleNext}>Next</Button>
+            </Box>
         </Container>
     );
 };
