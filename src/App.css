@@ -24,3 +24,7 @@ a {
     justify-content: center;
     align-items: center;
 }
+
+.header-links a:hover {
+    color: white !important;
+}

@@ -1,7 +1,7 @@
 import {
     Box,
+    Container,
     Divider,
-    Grid,
     List,
     ListItem,
     Paper,
@@ -24,23 +24,36 @@ const SonglistCreator = () => {
         { artist: "The white Stripes", title: "Hotel Yorba" },
     ]);
     return (
-        <>
-            <Typography variant="h1" sx={{ textAlign: "center" }}>
-                Create the Perfect Playlist
-            </Typography>
-            <Typography sx={{ textAlign: "center" }}>
-                (Hint: It doesn't have to be perfect. You can change it later)
-            </Typography>
+        <Container sx={{ padding: "3em 0" }}>
             <Box
                 sx={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    flexWrap: { xs: "wrap", md: "nowrap" },
                     gap: "2em",
-                    padding: "2em 0",
+                    marginTop: "2em",
                 }}
             >
-                <TextField label="Find a Song" />
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                    }}
+                >
+                    <Typography
+                        variant="h1"
+                        sx={{ textAlign: "center", marginBottom: ".5em" }}
+                    >
+                        Create the Perfect Playlist
+                    </Typography>
+                    <Typography sx={{ textAlign: "center" }}>
+                        (Hint: It doesn't have to be perfect. You can change it
+                        later)
+                    </Typography>
+                    <TextField sx={{ marginTop: "1em" }} />
+                </Box>
                 <Paper elevation={2} sx={{ minWidth: "25rem" }}>
                     <List>
                         {songs.map((song, index) => {
@@ -56,7 +69,7 @@ const SonglistCreator = () => {
                     </List>
                 </Paper>
             </Box>
-        </>
+        </Container>
     );
 };
 

@@ -16,7 +16,7 @@ import Login from "../components/Login";
 const Register = () => {
     const containerRef = useRef();
     const [currentStep, setCurrentStep] = useState(0);
-    const steps = 3;
+    const steps = [<SonglistCreator />, <BasicInfo />, <Login />];
 
     const handleNext = () => {
         const nextStep = currentStep + 1;
@@ -34,47 +34,16 @@ const Register = () => {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    overflow: "hidden",
-                    padding: "3rem 0",
-                    position: "relative",
-                    height: "40rem",
                 }}
             >
-                <Fade
-                    in={currentStep === 0}
-                    mountOnEnter
-                    unmountOnExit
-                    // timeout={{ enter: 200, exit: 100 }}
-                    style={{
-                        position: "absolute",
-                        top: "0",
-                    }}
-                >
-                    <Box>
-                        <SonglistCreator />
-                    </Box>
-                </Fade>
-                <Fade
-                    in={currentStep === 1}
-                    mountOnEnter
-                    unmountOnExit
-                    style={{
-                        position: "absolute",
-                        top: "0",
-                    }}
-                >
-                    <Box>
-                        {/* <SonglistCreator /> */}
-                        <BasicInfo />
-                    </Box>
-                </Fade>
-                {/* <Login /> */}
+                {steps[currentStep]}
             </Box>
             <Box
                 sx={{
                     display: "flex",
-                    justifyContent: "space-between",
+                    justifyContent: "center",
                     marginBottom: "2rem",
+                    gap: "1em",
                 }}
             >
                 <Button onClick={handleBack}>Back</Button>

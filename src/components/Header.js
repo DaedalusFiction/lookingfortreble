@@ -115,31 +115,27 @@ const Header = () => {
                     </Box>
 
                     <Box
+                        className="header-links"
                         sx={{
                             flexGrow: 1,
                             display: { xs: "none", md: "flex" },
                         }}
                     >
                         {pages.map((page) => (
-                            <Link to={page}>
-                                <Button
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
-                                    sx={{
-                                        my: 2,
-                                        color:
-                                            location.pathname === "/" + page
-                                                ? "white"
-                                                : "var(--gray-100)",
-                                        fontSize: "1rem",
-                                        display: "block",
-                                        "&:hover": {
-                                            color: "white",
-                                        },
-                                    }}
-                                >
-                                    {page}
-                                </Button>
+                            <Link
+                                to={page}
+                                key={page}
+                                onClick={handleCloseNavMenu}
+                                style={{
+                                    color:
+                                        location.pathname === "/" + page
+                                            ? "white"
+                                            : "var(--gray-100)",
+                                    fontSize: "1rem",
+                                    margin: "0 1em",
+                                }}
+                            >
+                                {page}
                             </Link>
                         ))}
                     </Box>
