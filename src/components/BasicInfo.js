@@ -1,5 +1,6 @@
 import {
     Box,
+    Button,
     FormControl,
     FormHelperText,
     Input,
@@ -11,6 +12,8 @@ import {
 } from "@mui/material";
 
 import React, { useState } from "react";
+
+const axios = require("axios");
 
 const BasicInfo = () => {
     const [info, setInfo] = useState({});
@@ -31,6 +34,12 @@ const BasicInfo = () => {
         const newInfo = { ...info, date: e.target.value };
         setInfo(newInfo);
         console.log(newInfo);
+    };
+
+    const handleSubmit = () => {
+        axios.get("http://localhost:4000/api").then((res) => {
+            console.log(res);
+        });
     };
     return (
         <Box
@@ -63,7 +72,10 @@ const BasicInfo = () => {
                 </Select>
             </FormControl>
             <InputLabel id="Birthday">Birthday</InputLabel>
-            <Input type="date" labelId="Birthday" onChange={handleDateChange} />
+            <Input type="date" onChange={handleDateChange} />
+            <Button variant="contained" onClick={handleSubmit}>
+                Submit
+            </Button>
         </Box>
     );
 };
