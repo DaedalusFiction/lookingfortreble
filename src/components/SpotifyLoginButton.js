@@ -3,10 +3,14 @@ import axios from "axios";
 import React from "react";
 
 const SpotifyLoginButton = () => {
-    const handleSpotifyLogin = () => {
-        axios.get("http://localhost:4000/spotify/login").then((res) => {
-            console.log(res);
-        });
+    const handleSpotifyLogin = (e) => {
+        e.preventDefault();
+        axios
+            .get("http://localhost:4000/spotify/login", { mode: "cors" })
+            .then((res) => {
+                window.location.href = res.url;
+                // console.log(res);
+            });
     };
     return (
         <Button variant="contained" onClick={handleSpotifyLogin}>

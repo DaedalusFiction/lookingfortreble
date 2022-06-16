@@ -10,8 +10,15 @@ var cors = require("cors");
 var cookieParser = require("cookie-parser");
 
 app.use(express.static(publicPath));
-app.use("/spotify", spotifyRouter).use(cors()).use(cookieParser());
+app.use("/spotify", spotifyRouter);
+app.use(cors());
 
+app.get("/topTen", (req, res) => {
+    // axios.get("https://jsonplaceholder.typicode.com/todos").then((res) => {
+    //     console.log("testing topTen");
+    // });
+    res.json({ message: "Top Ten" });
+});
 app.get("*", (req, res) => {
     res.sendFile(path.join(publicPath, "index.html"));
 });

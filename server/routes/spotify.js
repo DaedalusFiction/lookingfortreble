@@ -8,7 +8,7 @@ var querystring = require("querystring");
 const client_id = "a3df4f16b2134c0dbea45f497ed4e49a";
 const client_secret = "cbb23f99f1e14caab4ff8e63e4441d89";
 // const redirect_uri = "https://lookingfortreble.com/spotify/callback";
-const redirect_uri = "https://davidjsorensen.com";
+const redirect_uri = "localhost:3000";
 
 var request = require("request"); // "Request" library
 
@@ -37,18 +37,16 @@ router.get("/userInfo", (req, res) => {
     res.json({ message: "userInfo" });
 });
 
-router.get("/songPreview", (req, res) => {
-    axios.get("https://jsonplaceholder.typicode.com/todos").then((res) => {
-        console.log("testing songPreview");
-    });
-    res.json({ message: "Song Preview" });
+router.get("/songPreview", async (req, res) => {
+    const data = await axios.get("https://jsonplaceholder.typicode.com/todos");
+    res.json({ message: data.data });
 });
 
 router.get("/topTen", (req, res) => {
     axios.get("https://jsonplaceholder.typicode.com/todos").then((res) => {
-        console.log("testing topTen");
+        console.log("testing topTen!");
     });
-    res.json({ message: "Top Ten" });
+    res.json({ message: "Top Ten!" });
 });
 
 var generateRandomString = function (length) {
@@ -65,19 +63,19 @@ var generateRandomString = function (length) {
 router.get("/login", (req, res) => {
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
-
+    console.log("testing");
     // your application requests authorization
     var scope = "user-read-private user-read-email";
-    res.redirect(
+    const redirectUrl =
         "https://accounts.spotify.com/authorize?" +
-            querystring.stringify({
-                response_type: "code",
-                client_id: client_id,
-                scope: scope,
-                redirect_uri: redirect_uri,
-                state: state,
-            })
-    );
+        querystring.stringify({
+            response_type: "code",
+            client_id: client_id,
+            scope: scope,
+            redirect_uri: redirect_uri,
+            state: state,
+        });
+    res.json({ url: redirectUrl });
 });
 
 router.get("/callback", function (req, res) {
