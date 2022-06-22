@@ -8,7 +8,11 @@ import {
     incrementIfOdd,
     selectCount,
 } from "../features/counter/counterSlice";
-import { updateUser, selectUser } from "../features/user/userSlice";
+import {
+    updateCurrentUser,
+    selectUser,
+    selectSpotifyToken,
+} from "../features/user/userSlice";
 import {
     Avatar,
     Box,
@@ -21,13 +25,9 @@ import {
 } from "@mui/material";
 import {
     getAuth,
-    getRedirectResult,
     GoogleAuthProvider,
-    linkWithCredential,
     onAuthStateChanged,
-    signInAnonymously,
     signInWithPopup,
-    signOut,
 } from "firebase/auth";
 import { auth, provider } from "../firebase";
 
@@ -37,6 +37,7 @@ const Profile = () => {
     const [currentUser, setCurrentUser] = useState(null);
     const count = useSelector(selectCount);
     const user = useSelector(selectUser);
+    const spotifyToken = useSelector(selectSpotifyToken);
     const dispatch = useDispatch();
     const [incrementAmount, setIncrementAmount] = useState("2");
 
@@ -73,49 +74,16 @@ const Profile = () => {
     const handleMenuClick = (e) => {
         switch (e.target.innerHTML) {
             case "Settings":
-                console.log("Settings");
+                console.log(spotifyToken);
                 setAnchorElUser(null);
                 break;
             case "Logout":
-                auth.signOut().then(dispatch(updateUser(null)));
+                auth.signOut().then(dispatch(updateCurrentUser(null)));
                 setAnchorElUser(null);
                 break;
             default:
                 return;
         }
-    };
-
-    const handleLogin = async () => {
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                const credential =
-                    GoogleAuthProvider.credentialFromResult(result);
-                const token = credential.accessToken;
-                // The signed-in user info.
-                console.log(result.user);
-                const user = {
-                    id: result.user.uid,
-                    name: result.user.displayName,
-                    photoURL: result.user.photoURL,
-                };
-                console.log(user);
-                dispatch(updateUser(user));
-                // ...
-            })
-            .catch((error) => {
-                // Handle Errors here.
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                // The email of the user's account used.
-                const email = error.customData.email;
-                // The AuthCredential type that was used.
-                const credential =
-                    GoogleAuthProvider.credentialFromError(error);
-                // ...
-            });
-
-        setAnchorElUser(null);
     };
 
     return (

@@ -18,11 +18,14 @@ import {
 } from "firebase/auth";
 import { auth } from "./firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUser, selectUser } from "./features/user/userSlice";
+import {
+    updateCurrentUser,
+    selectUser,
+    updateSpotifyToken,
+} from "./features/user/userSlice";
 import Discover from "./routes/Discover";
 
 function App() {
-    const [currentUser, setCurrentUser] = useState(null);
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
 
@@ -37,7 +40,7 @@ function App() {
                     name: user.displayName,
                     photoURL: user.photoURL,
                 };
-                dispatch(updateUser(newUser));
+                dispatch(updateCurrentUser(newUser));
                 // ...
             } else {
                 // User is signed out
@@ -45,7 +48,26 @@ function App() {
             }
         });
         return () => {};
-    }, []);
+    }, [dispatch]);
+
+    useEffect(() => {
+        const hash = window.location.hash;
+        let token = window.localStorage.getItem("token");
+        dispatch(updateSpotifyToken(token));
+
+        if (!token && hash) {
+            token = hash
+                .substring(1)
+                .split("&")
+                .find((elem) => elem.startsWith("access_token"))
+                .split("=")[1];
+
+            window.location.hash = "";
+            window.localStorage.setItem("token", token);
+            dispatch(updateSpotifyToken(token));
+        }
+        return () => {};
+    }, [dispatch]);
 
     return (
         <BrowserRouter>

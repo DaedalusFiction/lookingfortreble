@@ -4,6 +4,7 @@ import { fetchCount } from "../counter/counterAPI";
 const initialState = {
     currentUser: null,
     status: "logged out",
+    spotifyToken: "testing",
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -22,22 +23,11 @@ export const userSlice = createSlice({
     initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
-        updateUser: (state, action) => {
+        updateCurrentUser: (state, action) => {
             state.currentUser = action.payload;
         },
-        increment: (state) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.value += 1;
-        },
-        decrement: (state) => {
-            state.value -= 1;
-        },
-        // Use the PayloadAction type to declare the contents of `action.payload`
-        incrementByAmount: (state, action) => {
-            state.value += action.payload;
+        updateSpotifyToken: (state, action) => {
+            state.spotifyToken = action.payload;
         },
     },
     // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -54,13 +44,19 @@ export const userSlice = createSlice({
     },
 });
 
-export const { updateUser, increment, decrement, incrementByAmount } =
-    userSlice.actions;
+export const {
+    updateCurrentUser,
+    updateSpotifyToken,
+    increment,
+    decrement,
+    incrementByAmount,
+} = userSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectUser = (state) => state.user.currentUser;
+export const selectSpotifyToken = (state) => state.user.spotifyToken;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.

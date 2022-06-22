@@ -8,7 +8,7 @@ var querystring = require("querystring");
 const client_id = "a3df4f16b2134c0dbea45f497ed4e49a";
 const client_secret = "cbb23f99f1e14caab4ff8e63e4441d89";
 // const redirect_uri = "https://lookingfortreble.com/spotify/callback";
-const redirect_uri = "localhost:3000";
+const redirect_uri = "http://localhost:4000/spotify/callback";
 
 var request = require("request"); // "Request" library
 
@@ -23,7 +23,7 @@ const config = {
     },
 };
 
-router.use(cors());
+// router.use(cors());
 
 router.get("/userInfo", (req, res) => {
     axios
@@ -61,24 +61,26 @@ var generateRandomString = function (length) {
 };
 
 router.get("/login", (req, res) => {
+    console.log("login");
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
-    console.log("testing");
+
     // your application requests authorization
     var scope = "user-read-private user-read-email";
-    const redirectUrl =
+    res.redirect(
         "https://accounts.spotify.com/authorize?" +
-        querystring.stringify({
-            response_type: "code",
-            client_id: client_id,
-            scope: scope,
-            redirect_uri: redirect_uri,
-            state: state,
-        });
-    res.json({ url: redirectUrl });
+            querystring.stringify({
+                response_type: "code",
+                client_id: client_id,
+                scope: scope,
+                redirect_uri: redirect_uri,
+                state: state,
+            })
+    );
 });
 
 router.get("/callback", function (req, res) {
+    console.log("callback");
     // your application requests refresh and access tokens
     // after checking the state parameter
 
@@ -87,6 +89,7 @@ router.get("/callback", function (req, res) {
     var storedState = req.cookies ? req.cookies[stateKey] : null;
 
     if (state === null || state !== storedState) {
+        console.log("state one");
         res.redirect(
             "/#" +
                 querystring.stringify({
@@ -94,6 +97,7 @@ router.get("/callback", function (req, res) {
                 })
         );
     } else {
+        console.log("state two");
         res.clearCookie(stateKey);
         var authOptions = {
             url: "https://accounts.spotify.com/api/token",
@@ -111,8 +115,9 @@ router.get("/callback", function (req, res) {
             },
             json: true,
         };
-
+        console.log("posting");
         request.post(authOptions, function (error, response, body) {
+            console.log("posting...");
             if (!error && response.statusCode === 200) {
                 var access_token = body.access_token,
                     refresh_token = body.refresh_token;

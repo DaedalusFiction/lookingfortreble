@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, updateUser } from "../features/user/userSlice";
+import { selectUser, updateCurrentUser } from "../features/user/userSlice";
 import { auth, provider } from "../firebase";
 
 const LoginButton = () => {
@@ -25,7 +25,7 @@ const LoginButton = () => {
                     photoURL: result.user.photoURL,
                 };
                 console.log(user);
-                dispatch(updateUser(user));
+                dispatch(updateCurrentUser(user));
                 // ...
             })
             .catch((error) => {

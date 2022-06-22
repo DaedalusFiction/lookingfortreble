@@ -11,9 +11,13 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import SpotifyLoginButton from "./SpotifyLoginButton";
+import axios from "axios";
+import { useEffect } from "react";
 
 const SonglistCreator = () => {
     const [searchValue, setSearchValue] = useState("");
+
+    const [artists, setArtists] = useState([]);
     const [songs, setSongs] = useState([
         { artist: "The white Stripes", title: "Hotel Yorba" },
         { artist: "The white Stripes", title: "Hotel Yorba" },
@@ -26,13 +30,46 @@ const SonglistCreator = () => {
         { artist: "The white Stripes", title: "Hotel Yorba" },
         { artist: "The white Stripes", title: "Hotel Yorba" },
     ]);
+    const CLIENT_ID = "+++++++++++++++++++++++++++++";
+    const REDIRECT_URI = "http://localhost:3000/register";
+    const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
+    const RESPONSE_TYPE = "token";
+
+    const [token, setToken] = useState("");
+    useEffect(() => {
+        const hash = window.location.hash;
+        let token = window.localStorage.getItem("token");
+
+        if (!token && hash) {
+            token = hash
+                .substring(1)
+                .split("&")
+                .find((elem) => elem.startsWith("access_token"))
+                .split("=")[1];
+
+            window.location.hash = "";
+            window.localStorage.setItem("token", token);
+        }
+
+        setToken(token);
+    }, []);
 
     const handleSearchChange = (e) => {
         console.log(e.target.value);
         setSearchValue(e.target.value);
     };
-    const handleSearch = (e) => {
-        console.log(searchValue);
+    const handleSearch = async (e) => {
+        console.log(token);
+        const { data } = await axios.get("https://api.spotify.com/v1/search", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            params: {
+                q: searchValue,
+                type: "artist",
+            },
+        });
+        setArtists(data.artists.items);
     };
     return (
         <Container sx={{ padding: "3em 0" }}>
@@ -74,13 +111,15 @@ const SonglistCreator = () => {
                 </Box>
                 <Paper elevation={2} sx={{ minWidth: "25rem" }}>
                     <List>
-                        {songs.map((song, index) => {
+                        {artists.map((artist, index) => {
                             return (
                                 <Box key={index}>
                                     <ListItem>
-                                        {index + 1}. {song.title}
+                                        {index + 1}. {artist.name}
                                     </ListItem>
-                                    {index !== songs.length - 1 && <Divider />}
+                                    {index !== artists.length - 1 && (
+                                        <Divider />
+                                    )}
                                 </Box>
                             );
                         })}

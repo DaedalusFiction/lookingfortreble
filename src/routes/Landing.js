@@ -42,7 +42,7 @@ const Landing = () => {
                         >
                             Meet new people, make friends, and find your special
                             someone based on what truly matters most in life:
-                            Your shared taste in music
+                            your shared taste in music
                         </Typography>
                         <Link to="register">
                             <Button
